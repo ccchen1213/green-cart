@@ -1,11 +1,14 @@
 import React from 'react'
-import Navbar from './components/Navbar'
 import { Route, Routes, useLocation } from 'react-router-dom'
-import Home from './pages/Home'
 import {Toaster} from 'react-hot-toast'
-import Footer from './components/Footer'
 import { useAppContext } from './context/AppContext'
+// Components
+import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 import Login from './components/Login'
+// Pages
+import Home from './pages/Home'
+import AllProducts from './pages/AllProducts'
 
 const App = () => {
   const isSellerPath = useLocation().pathname.includes('seller')
@@ -24,6 +27,7 @@ const App = () => {
       >
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/products" element={<AllProducts />} />
         </Routes>
       </div>
 
