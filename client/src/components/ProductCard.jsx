@@ -5,6 +5,7 @@ import { useAppContext } from '../context/AppContext'
 const ProductCard = ({ product }) => {
   const { currency, addToCart, removeFromCart, cartItems, navigate } = useAppContext()
 
+  // TODO:  
   const handleClick = () => {
     navigate(`/products/${product.category.toLowerCase()}/${product._id}`); 
     scrollTo(0,0)
