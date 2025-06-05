@@ -54,6 +54,53 @@ export const register = async (req, res) => {
   }
 }
 
+// Login user: /api/user/login
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check required info
+    if(!email || !password) {
+      return res.json({ success: false, message: 'Email and password are required' })
+    }
+
+    // Check existing email
+    const user = await User.findOne({ email });
+    if(!user) {
+      return res.json({ success: false, message: 'Invalid email or password' })
+    }
+
+    // Compare password
+    const isMatch = await bcrypt.compare(password, user.password)
+    if(!isMatch) {
+      return res.json({ success: false, message: 'Invalid email or password' })
+    }
+
+    // Create token
+    const token = jwt.sign({ id: user._id }, 
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    // Token settings
+    res.cookie('token', token, {
+      httpOnly: true, // Prevent js to access cookie
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict', // CSRF protection
+      maxAge: 7 * 24 * 60 * 60 * 1000, // Expiration time - 7d
+    })
+
+    // return user data
+    return res.json({ success: true, 
+      user: { email: user.email, name: user.name }
+    })
+
+  } catch (error) {
+    console.log(error.message);
+    res.json({ success: false, message: error.message })
+  }
+}
+
 // Check Auth: /api/user/is-auth
 export const isAuth = async (req, res) => {
   try {
