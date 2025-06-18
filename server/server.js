@@ -2,6 +2,7 @@ import cookieParser from 'cookie-parser';
 import express from 'express'
 import cors from 'cors'
 import connectDB from './configs/db.js';
+import connectCloudinary from './configs/cloudinary.js';
 import 'dotenv/config'
 import userRouter from './routes/userRoute.js';
 import sellerRouter from './routes/sellerRoutes.js';
@@ -9,9 +10,9 @@ import sellerRouter from './routes/sellerRoutes.js';
 const app = express();
 const port = process.env.PORT || 4000;
 
-console.log('Before DB');
 try {
   await connectDB();
+  await connectCloudinary
   console.log('After DB, before middlewares');
 } catch (error) {
   console.log('Connect database failed: ' + error);
